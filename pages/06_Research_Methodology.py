@@ -11,6 +11,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from config.settings import TICKERS, START_DATE, END_DATE, SIMULATION_START, SIMULATION_END
+from src.ui import render_disclaimer_footer
 
 st.title("📚 Research Methodology (MScFE 652 GWP2)")
 
@@ -113,3 +114,5 @@ st.header("Reference for the Black-Litterman model")
 st.markdown("Black, F., & Litterman, R. (1992). *Global Portfolio Optimization*. "
             "Financial Analysts Journal, 48(5), 28–43. Views used here are analyst assumptions "
             "documented in the original report (Table 12) and in `src/views.py`.")
+
+render_disclaimer_footer()

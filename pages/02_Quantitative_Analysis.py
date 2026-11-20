@@ -7,6 +7,7 @@ import streamlit as st
 
 from config.settings import TICKERS, START_DATE, END_DATE
 from src import data_collection as dc, models, visualization as viz
+from src.ui import render_disclaimer_footer
 
 st.title("🧮 Quantitative Analysis — MVO (Steps 1–3)")
 st.caption("True SLSQP optimization maximizing the Sharpe ratio. No weight simulation "
@@ -49,3 +50,5 @@ if st.button("Compute efficient frontier"):
         best={"volatility": res["step1"]["volatility"], "return": res["step1"]["return"]}),
         width="stretch")
     st.download_button("Download frontier CSV", f.to_csv(index=False), "efficient_frontier.csv")
+
+render_disclaimer_footer()

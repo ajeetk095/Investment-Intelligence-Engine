@@ -4,13 +4,13 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import streamlit as st
 import pandas as pd
 
-from config.settings import TICKERS, START_DATE, END_DATE, DATA_NOTICE
+from config.settings import TICKERS, START_DATE, END_DATE
 from src import data_collection as dc
 from src import data_processing as dp
 from src import visualization as viz
+from src.ui import render_disclaimer_footer
 
 st.title("📊 Market Overview")
-st.caption(DATA_NOTICE)
 
 @st.cache_data(ttl=3600, show_spinner="Fetching live data from Yahoo Finance...")
 def load(_tickers, start, end):
@@ -54,3 +54,5 @@ with col1:
 with col2:
     st.plotly_chart(viz.correlation_heatmap(dp.correlation_matrix(returns)), width="stretch")
     st.metric("Average pairwise correlation", f"{dp.avg_pairwise_correlation(returns):.3f}")
+
+render_disclaimer_footer()

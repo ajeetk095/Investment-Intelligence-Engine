@@ -6,7 +6,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import streamlit as st
 
-from config.settings import APP_TITLE, APP_SUBTITLE, DATA_NOTICE
+from config.settings import APP_TITLE, DATA_NOTICE
+from src.ui import render_disclaimer_footer
 
 st.set_page_config(page_title=APP_TITLE, page_icon="chart_with_upwards_trend",
                    layout="wide", initial_sidebar_state="expanded")
@@ -25,7 +26,7 @@ market data** and explains every number it shows.
 |---|---|
 | **Market Overview** | Live prices, returns, volatility, correlation heatmap |
 | **Quantitative Analysis** | The three optimized MVO portfolios (Steps 1-3) + efficient frontier |
-| **Predictive Analytics** | Bootstrap forecast + walk-forward ML regime probability (with honesty notes) |
+| **Predictive Analytics** | Bootstrap forecast + walk-forward ML regime probability |
 | **Investor Insights** | Evidence-based signals for retail, institutional and corporate readers |
 | **Risk Analysis** | VaR, CVaR, drawdowns, Monte Carlo scenarios |
 | **Research Methodology** | The original GWP2 study, reproduced step by step |
@@ -36,12 +37,6 @@ market data** and explains every number it shows.
 3. Check **Risk Analysis** before acting on any expected return - look at VaR and drawdowns, not just returns.
 4. Read **Research Methodology** for how each number is produced and what its limits are.
 """)
-
-st.info("⚠️ **Disclaimer:** Everything here is educational research output from statistical models. "
-        "It is **not** investment advice, and model estimates are not guarantees. Data feeds are delayed "
-        "and unofficial.")
-
-st.caption(DATA_NOTICE)
 
 st.markdown("### About the developer")
 image_column, profile_column = st.columns([1, 3])
@@ -83,3 +78,5 @@ if send_message:
         email_body = f"From: {visitor_email.strip()}\n\n{email_message.strip()}"
         mailto_url = f"mailto:ajeetk095@gmail.com?{urlencode({'subject': email_subject.strip(), 'body': email_body})}"
         st.link_button("Open email app", mailto_url)
+
+render_disclaimer_footer()

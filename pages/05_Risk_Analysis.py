@@ -10,9 +10,9 @@ from src import data_collection as dc
 from src.data_processing import annualized_stats
 from src.risk_analysis import (historical_var, historical_cvar, max_drawdown,
                                var_confidence, regime_flag, portfolio_return_series)
+from src.ui import render_disclaimer_footer
 
 st.title("🛡️ Risk Analysis")
-st.caption("All risk figures are historical estimates with sampling uncertainty — not worst-case guarantees.")
 
 @st.cache_data(ttl=3600, show_spinner="Fetching data...")
 def load(_tickers, start, end):
@@ -55,3 +55,7 @@ c1, c2, c3 = st.columns(3)
 c1.metric("Daily VaR", f"{historical_var(port, conf):.2%}")
 c2.metric("Daily CVaR", f"{historical_cvar(port, conf):.2%}")
 c3.metric("Max Drawdown", f"{max_drawdown(port):.2%}")
+
+render_disclaimer_footer(
+    "Risk measures are historical estimates subject to sampling uncertainty; VaR and CVaR do not guarantee or bound worst-case losses.",
+)
