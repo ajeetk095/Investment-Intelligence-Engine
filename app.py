@@ -1,41 +1,41 @@
-"""GWP2 Investment Intelligence - Streamlit app entry point.
-Run: streamlit run app.py"""
+"""Investment-Intelligence-Engine - Streamlit app entry point."""
 import sys, os
 from urllib.parse import urlencode
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import streamlit as st
 
-from config.settings import APP_TITLE, DATA_NOTICE
-from src.ui import render_disclaimer_footer
+from config.settings import APP_TITLE, TICKERS
+from src.ui import (render_disclaimer_footer, render_market_simulator,
+                    setup_page_experience)
 
 st.set_page_config(page_title=APP_TITLE, page_icon="chart_with_upwards_trend",
                    layout="wide", initial_sidebar_state="expanded")
-
+controls = setup_page_experience("home", TICKERS)
 st.sidebar.success("Navigate pages from the sidebar.")
 st.title(APP_TITLE)
-st.subheader("Bridging Code & Capital - quantitative portfolio research on real market data")
+st.subheader("Bridging Code & Capital · quantitative portfolio research made easier to explore")
 
 st.markdown("""
-### What this application does
-This platform turns an academic portfolio-optimization study (MScFE 652 Group Work Project 2,
-WorldQuant University) into a working research tool. It runs **real optimization on live
-market data** and explains every number it shows.
+### Your portfolio research, in plain language
+Explore current available market data, compare portfolio strategies, and see how risk changes under different assumptions. Use the sidebar to switch between the latest available market history and the original GWP2 study window.
 
-| Page | What you get |
+| Explore | What you can learn |
 |---|---|
-| **Market Overview** | Live prices, returns, volatility, correlation heatmap |
-| **Quantitative Analysis** | The three optimized MVO portfolios (Steps 1-3) + efficient frontier |
-| **Predictive Analytics** | Bootstrap forecast + walk-forward ML regime probability |
-| **Investor Insights** | Evidence-based signals for retail, institutional and corporate readers |
-| **Risk Analysis** | VaR, CVaR, drawdowns, Monte Carlo scenarios |
-| **Research Methodology** | The original GWP2 study, reproduced step by step |
+| **Market Overview** | Prices, returns, volatility and how assets move together |
+| **Quantitative Analysis** | How portfolio weights change under different constraints |
+| **Predictive Analytics** | How historical-return resampling illustrates a range of possible outcomes |
+| **Investor Insights** | What model signals mean in everyday language |
+| **Risk Analysis** | Historical loss measures and drawdowns |
+| **Research Methodology** | How the original GWP2 study was conducted |
 
-### How to use this app (2-minute guide)
-1. Open **Market Overview** and confirm the data timestamp at the top - all figures come from Yahoo Finance (delayed) and FRED.
-2. Go to **Quantitative Analysis** to see the optimized portfolios and their weights.
-3. Check **Risk Analysis** before acting on any expected return - look at VaR and drawdowns, not just returns.
-4. Read **Research Methodology** for how each number is produced and what its limits are.
+### A simple way to explore
+1. Start with **Market Overview** for the selected period and latest available prices.
+2. Compare returns with volatility; higher potential return estimates can come with larger swings.
+3. Try the optional **Market sandbox** on any page to explore a hypothetical shock and horizon.
+4. Use **Refresh** to clear cached prices or **Reset** to return to the default live-data view.
+
+The market pulse and sandbox help explain data; neither can know future events or determine what is suitable for your personal situation.
 """)
 
 st.markdown("### About the developer")
@@ -58,19 +58,17 @@ and Black-Litterman to Monte Carlo and deep learning.
 **Highlights:** 1st Place, IIT Kanpur ML Hackathon · Felicitated by the President of India ·
 AI systems built at Algo8.ai and Amul. Seeking full-time Quant Research / Financial Engineering roles.
 """)
-
 st.markdown("[🔗 Connect on LinkedIn](https://www.linkedin.com/in/ajeek095/)  ·  "
             "[🐙 GitHub](https://github.com/ajeetk095)  ·  "
             "[✉️ Hire me](mailto:ajeetk095@gmail.com?subject=Quant%20role%20inquiry)")
 
 st.markdown("#### Send me a message")
-st.caption("Enter your details, then use Send mail to open a pre-addressed email in your mail app. The website does not send or store your message.")
+st.caption("Your mail app opens with the message filled in; the website does not send or store it.")
 with st.form("developer_contact_form"):
     visitor_email = st.text_input("Your email", placeholder="you@example.com")
     email_subject = st.text_input("Subject")
     email_message = st.text_area("Message")
     send_message = st.form_submit_button("Send mail")
-
 if send_message:
     if not visitor_email.strip() or not email_subject.strip() or not email_message.strip():
         st.warning("Please provide your email, a subject, and a message.")
@@ -79,4 +77,5 @@ if send_message:
         mailto_url = f"mailto:ajeetk095@gmail.com?{urlencode({'subject': email_subject.strip(), 'body': email_body})}"
         st.link_button("Open email app", mailto_url)
 
+render_market_simulator("home", TICKERS, controls)
 render_disclaimer_footer()
