@@ -1,4 +1,4 @@
-"""Central configuration for the GWP2 Investment Intelligence app."""
+"""Central configuration for the Investment-Intelligence-Engine app."""
 import os
 
 TICKERS = ["AAPL", "NVDA", "TSLA", "XOM", "REGN", "LLY", "JPM"]
@@ -31,7 +31,7 @@ DATA_NOTICE = (
     "Macro data via FRED (Federal Reserve Bank of St. Louis)."
 )
 
-APP_TITLE = "GWP2 Investment Intelligence"
+APP_TITLE = "Investment-Intelligence-Engine"
 APP_SUBTITLE = "Quantitative portfolio research platform - built on MScFE 652 GWP2 methodology"
 
 
