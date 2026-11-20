@@ -1,6 +1,7 @@
 """GWP2 Investment Intelligence - Streamlit app entry point.
 Run: streamlit run app.py"""
 import sys, os
+from urllib.parse import urlencode
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import streamlit as st
@@ -43,8 +44,14 @@ st.info("⚠️ **Disclaimer:** Everything here is educational research output f
 st.caption(DATA_NOTICE)
 
 st.markdown("### About the developer")
-c1, c2, c3 = st.columns([1, 2, 1])
-with c2:
+image_column, profile_column = st.columns([1, 3])
+with image_column:
+    st.image(
+        "https://media.licdn.com/dms/image/v2/D5603AQHv97cmwfVvxQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1692917722661?e=1796860800&v=beta&t=4u57u5_Tz7UqbEcUwTdKrXoPRt0lo8ZolJ5vRKRollk",
+        width=220,
+        caption="Ajeet Kumar",
+    )
+with profile_column:
     st.markdown("""
 **Ajeet Kumar — Quantitative Finance & AI Professional**
 
@@ -59,3 +66,19 @@ AI systems built at Algo8.ai and Amul. Seeking full-time Quant Research / Financ
 st.markdown("[🔗 Connect on LinkedIn](https://www.linkedin.com/in/ajeek095/)  ·  "
             "[🐙 GitHub](https://github.com/ajeetk095)  ·  "
             "[✉️ Hire me](mailto:ajeetk095@gmail.com?subject=Quant%20role%20inquiry)")
+
+st.markdown("#### Send me a message")
+st.caption("Fill in the fields below to open a pre-addressed email in your mail app. Your message is not sent by this website.")
+with st.form("developer_contact_form"):
+    visitor_email = st.text_input("Your email", placeholder="you@example.com")
+    email_subject = st.text_input("Subject")
+    email_message = st.text_area("Message")
+    send_message = st.form_submit_button("Prepare email")
+
+if send_message:
+    if not visitor_email.strip() or not email_subject.strip() or not email_message.strip():
+        st.warning("Please provide your email, a subject, and a message.")
+    else:
+        email_body = f"From: {visitor_email.strip()}\n\n{email_message.strip()}"
+        mailto_url = f"mailto:ajeetk095@gmail.com?{urlencode({'subject': email_subject.strip(), 'body': email_body})}"
+        st.markdown(f"[Open your email app to send the message]({mailto_url})")
