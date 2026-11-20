@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.env
+.secrets.toml
+.venv/
+venv/
+*.csv
+*.png
+.ipynb_checkpoints/
