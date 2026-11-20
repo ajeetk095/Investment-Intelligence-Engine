@@ -46,10 +46,11 @@ st.caption(DATA_NOTICE)
 st.markdown("### About the developer")
 image_column, profile_column = st.columns([1, 3])
 with image_column:
-    st.image(
-        "https://media.licdn.com/dms/image/v2/D5603AQHv97cmwfVvxQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1692917722661?e=1796860800&v=beta&t=4u57u5_Tz7UqbEcUwTdKrXoPRt0lo8ZolJ5vRKRollk",
-        width=220,
-        caption="Ajeet Kumar",
+    st.markdown(
+        '''<img src="https://media.licdn.com/dms/image/v2/D5603AQHv97cmwfVvxQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1692917722661?e=1796860800&v=beta&t=4u57u5_Tz7UqbEcUwTdKrXoPRt0lo8ZolJ5vRKRollk"
+             alt="Ajeet Kumar" width="140" height="140"
+             style="width:140px;height:140px;object-fit:cover;border-radius:50%;display:block;margin:0 auto;" />''',
+        unsafe_allow_html=True,
     )
 with profile_column:
     st.markdown("""
@@ -68,12 +69,12 @@ st.markdown("[🔗 Connect on LinkedIn](https://www.linkedin.com/in/ajeek095/)  
             "[✉️ Hire me](mailto:ajeetk095@gmail.com?subject=Quant%20role%20inquiry)")
 
 st.markdown("#### Send me a message")
-st.caption("Fill in the fields below to open a pre-addressed email in your mail app. Your message is not sent by this website.")
+st.caption("Enter your details, then use Send mail to open a pre-addressed email in your mail app. The website does not send or store your message.")
 with st.form("developer_contact_form"):
     visitor_email = st.text_input("Your email", placeholder="you@example.com")
     email_subject = st.text_input("Subject")
     email_message = st.text_area("Message")
-    send_message = st.form_submit_button("Prepare email")
+    send_message = st.form_submit_button("Send mail")
 
 if send_message:
     if not visitor_email.strip() or not email_subject.strip() or not email_message.strip():
@@ -81,4 +82,4 @@ if send_message:
     else:
         email_body = f"From: {visitor_email.strip()}\n\n{email_message.strip()}"
         mailto_url = f"mailto:ajeetk095@gmail.com?{urlencode({'subject': email_subject.strip(), 'body': email_body})}"
-        st.markdown(f"[Open your email app to send the message]({mailto_url})")
+        st.link_button("Open email app", mailto_url)
