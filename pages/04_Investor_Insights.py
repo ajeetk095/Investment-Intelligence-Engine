@@ -19,7 +19,7 @@ def load(_tickers, start, end):
     prices = dc.fetch_prices(_tickers, start, end)
     returns = dc.compute_returns(prices)
     cov = returns.cov() * 252
-    mkt = pd.Series(MARKET_CAPS_B)[list(_tickers)]
+    mkt = pd.Series(MARKET_CAPS_B)[list(_tickers)].fillna(0)
     mkt = mkt / mkt.sum()
     from src.models import views_matrices, black_litterman
     P, Q, Om, desc = views_matrices(list(_tickers), VIEWS, cov)
@@ -32,27 +32,20 @@ stats = annualized_stats(returns, rf)
 scores = rec.asset_scores(stats, bl_mu, returns)
 
 with st.expander("How to read these signals", expanded=True):
-    st.markdown("The score blends historical risk-adjusted returns, Black-Litterman assumptions, and recent momentum. "
-                "A higher score means the rule ranked that asset higher within this sample—not that it is certain to perform better.")
+    st.markdown("The score blends historical risk-adjusted returns, Black-Litterman assumptions, and recent momentum. Higher ranking means stronger model output within this sample—not certainty of future performance.")
 
-tab1, tab2, tab3 = st.tabs(["🛍️ Everyday view", "🏛️ Quantitative view", "🏢 Business context"])
-with tab1:
-    st.markdown("**A simple takeaway:** compare the leading score with its volatility and historical drawdown before drawing conclusions. "
-                "Consider diversification and whether you could tolerate a fall in value.")
-    st.dataframe(scores.style.format({"Score": "{:.2f}", "Momentum (ann.)": "{:.1%}",
-                                      "Hist. Sharpe": "{:.2f}"}), width="stretch")
-with tab2:
-    st.dataframe(pd.DataFrame({"BL posterior μ": bl_mu, "Hist μ (ann.)": stats["Ann. Return"],
-                               "Hist σ (ann.)": stats["Ann. Volatility"]}).style.format("{:.2%}"), width="stretch")
-    for line in rec.strategy_guidance(rf, {}):
-        st.markdown(f"- {line}")
-with tab3:
-    st.markdown("- Portfolio weights respond to estimates and the selected risk-free-rate assumption.")
-    st.markdown("- Diversification can reduce exposure to a single company, but cannot eliminate market-wide losses.")
-    st.markdown("- Black-Litterman analyst views are documented assumptions, not verified forecasts.")
+t1, t2, t3 = st.tabs(["🛍️ Everyday view", "🏛️ Quantitative view", "🏢 Business context"])
+with t1:
+    st.markdown("**Simple takeaway:** compare the leading score with volatility and historical drawdown. Consider diversification and whether you could tolerate a fall in value.")
+    st.dataframe(scores.style.format({"Score": "{:.2f}", "Momentum (ann.)": "{:.1%}", "Hist. Sharpe": "{:.2f}"}), width="stretch")
+with t2:
+    st.dataframe(pd.DataFrame({"BL posterior μ": bl_mu, "Hist μ (ann.)": stats["Ann. Return"], "Hist σ (ann.)": stats["Ann. Volatility"]}).style.format("{:.2%}"), width="stretch")
+    for line in rec.strategy_guidance(rf, {}): st.markdown(f"- {line}")
+with t3:
+    st.markdown("- Portfolio weights respond to estimates and the risk-free-rate assumption.")
+    st.markdown("- Diversification can reduce one-company exposure, but not market-wide losses.")
+    st.markdown("- Black-Litterman analyst views are assumptions, not verified forecasts.")
 st.download_button("Download signals CSV", scores.to_csv(), "asset_signals.csv")
 
 render_market_simulator("insights", TICKERS, controls)
-render_disclaimer_footer(
-    "Signals are research outputs from historical and model-derived data, not personalized investment advice or recommendations. Analyst views in the Black-Litterman model are assumptions, not verified forecasts.",
-)
+render_disclaimer_footer("Signals are research outputs, not personalized investment advice or recommendations.")
